@@ -422,16 +422,17 @@ if __name__ == "__main__":
                                                              d['Lastname']))
 
             if d['Authorname'] not in authdict.keys():
-                authdict[d['Authorname']] = [d['Affiliation']]
+                authdict[d['Authorname']] = [d['ORCID'],d['Affiliation']]
             else:
                 authdict[d['Authorname']].append(d['Affiliation'])
 
         authors = []
         for key,val in authdict.items():
-            author = r'\author{%s}'%key+'\n'
-            for v in val:
+            author = r'\author[{}]{{{}}}'.format(val[0],key)+'\n'
+            for v in val[1:]:
                 author += r'\affiliation{%s}'%v+'\n'
             authors.append(author)
+            print(author)
         params = dict(defaults,authors=''.join(authors))
 
     ### Separate author and affiliation ###
